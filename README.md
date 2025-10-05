@@ -108,7 +108,10 @@ Create content (as teacher):
 Include Authorization: Bearer <token> header
 Browse content (as student or teacher)
 💡 Add test categories and users via Django Admin at http://127.0.0.1:8000/admin/ 
-📂 Project Structure
+
+```
+# 📂 Project Structure
+```
 biotutor-api/
 ├── biotutor/               # Main Django project config
 ├── biology_api/            # Core app
@@ -120,15 +123,15 @@ biotutor-api/
 ├── manage.py
 ├── requirements.txt
 └── README.md
-
-🗓️ Roadmap
-Week 4:
-Unit tests
-Student portal frontend (Bootstrap)
-Enhanced search & filtering
-Week 5:
-Deploy backend on PythonAnywhere
-Host static frontend
-Final demo video
+```
+# 🗓️ Roadmap
+## Week 4:
+- Unit tests
+- Student portal frontend (Bootstrap)
+- Enhanced search & filtering
+## Week 5:
+- Deploy backend on PythonAnywhere
+- Host static frontend
+- Final demo video
 🤝 Contributing
 This is an ALX Capstone Project (individual work). However, feedback is welcome!
