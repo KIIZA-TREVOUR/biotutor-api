@@ -1,7 +1,11 @@
 from django.contrib import admin
-from .models import Category, BiologyContent
+from .models import Category, BiologyContent,User
 
 # Register your models here.
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('username','email','role','first_name','last_name')
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name','slug','created_at')
