@@ -45,7 +45,23 @@
   </div>
 
   <script>
-    
+    async function loadCategories() {
+        try {
+            const res = await fetch('http://127.0.0.1:8000/api/categories/');
+            const categories = await res.json();
+            const select = document.getElementById('categoryFilter');
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.id;
+                option.textContent = cat.name;
+                select.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading categories:', error);
+        }
+        
+    }
+    loadCategories();
   </script>
 </body>
 </html>
