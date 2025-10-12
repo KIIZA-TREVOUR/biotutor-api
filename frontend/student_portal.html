@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BioTutor - Student Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .content-card { margin-bottom: 1.5rem; }
+    .summary { color: #495057; }
+  </style>
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    <header class="mb-4">
+      <h1>BioTutor - Student Portal</h1>
+      <p class="text-muted">Browse biology lessons aligned with Uganda's curriculum</p>
+    </header>
+
+    <!-- Search & Filter -->
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search lessons...">
+      </div>
+      <div class="col-md-4">
+        <select id="categoryFilter" class="form-select">
+          <option value="">All Categories</option>
+          
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button id="searchBtn" class="btn btn-primary w-100">Search</button>
+      </div>
+    </div>
+
+    <!-- Content List -->
+    <div id="contentList">
+
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation" id="pagination" style="display:none;">
+      <ul class="pagination justify-content-center" id="paginationList"></ul>
+    </nav>
+  </div>
+
+<script>
+    let currentPage = 1;
+
+    async function loadCategories() {
+      try {
+        const res = await fetch('http://127.0.0.1:8000/api/categories/');
+        const categories = await res.json();
+        const select = document.getElementById('categoryFilter');
+        categories.forEach(cat => {
+          const option = document.createElement('option');
+          option.value = cat.slug;
+          option.textContent = cat.name;
+          select.appendChild(option);
+        });
+      } catch (err) {
+        console.error('Failed to load categories:', err);
+      }
+    }
+
+    async function loadContent(search = '', category = '', page = 1) {
+      let url = `http://127.0.0.1:8000/api/content/?page=${page}`;
+      if (search) url += `&search=${encodeURIComponent(search)}`;
+      if (category) url += `&category=${encodeURIComponent(category)}`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        // Render content
+        const list = document.getElementById('contentList');
+        list.innerHTML = '';
+        if (data.results && data.results.length > 0) {
+          data.results.forEach(item => {
+            const card = `
+              <div class="card content-card">
+                <div class="card-body">
+                  <h5 class="card-title">${item.title}</h5>
+                  <p class="summary">${item.summary}</p>
+                  <small class="text-muted">Category: ${item.category.name || item.category}</small>
+                </div>
+              </div>
+            `;
+            list.innerHTML += card;
+          });
+        } else {
+          list.innerHTML = '<p class="text-center text-muted">No lessons found.</p>';
+        }
+
+        // Handle pagination
+        setupPagination(data.count, page);
+      } catch (err) {
+        console.error('Failed to load content:', err);
+        document.getElementById('contentList').innerHTML = '<p class="text-danger">Error loading lessons.</p>';
+      }
+    }
+
+    function setupPagination(totalItems, currentPage) {
+      const pageSize = 10;
+      const totalPages = Math.ceil(totalItems / pageSize);
+      const pagination = document.getElementById('pagination');
+      const list = document.getElementById('paginationList');
+      
+      if (totalPages <= 1) {
+        pagination.style.display = 'none';
+        return;
+      }
+      
+      pagination.style.display = 'block';
+      list.innerHTML = '';
+      
+      // Prev
+      if (currentPage > 1) {
+        list.innerHTML += `<li class="page-item"><a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a></li>`;
+      }
+      
+      // Pages (simplified: show current only)
+      list.innerHTML += `<li class="page-item active"><span class="page-link">${currentPage}</span></li>`;
+      
+      // Next
+      if (currentPage < totalPages) {
+        list.innerHTML += `<li class="page-item"><a class="page-link" href="#" data-page="${currentPage + 1}">Next</a></li>`;
+      }
+      
+      // Add click handlers
+      document.querySelectorAll('#paginationList a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const page = parseInt(e.target.dataset.page);
+          const search = document.getElementById('searchInput').value;
+          const category = document.getElementById('categoryFilter').value;
+          loadContent(search, category, page);
+        });
+      });
+    }
+
+    // Search button handler
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const search = document.getElementById('searchInput').value;
+      const category = document.getElementById('categoryFilter').value;
+      loadContent(search, category, 1);
+    });
+
+    // Allow Enter key in search
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') document.getElementById('searchBtn').click();
+    });
+
+    // Initial load
+    loadCategories();
+    loadContent();
+</script>
+</body>
+</html>
