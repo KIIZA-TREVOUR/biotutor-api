@@ -5,6 +5,8 @@ from .serializers import CategorySerializer, BiologyContentSerializer
 from django_filters.rest_framework import DjangoFilterBackend  
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .permissions import IsTeacher, IsAuthor
+from .filters import BiologyContentFilter  
+
 # Create your views here.
 
 class CategoryListView(generics.ListAPIView):
@@ -18,8 +20,8 @@ class CategoryDetailView(generics.RetrieveAPIView):
 class BiologyContentListView(generics.ListCreateAPIView):
     serializer_class = BiologyContentSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['category_slug','author']
-    search_fields = ['title', 'content_body', 'summary']
+    filterset_class = BiologyContentFilter 
+    search_fields = ['title', 'content_body']
     ordering_fields = ['created_at', 'title']
     ordering = ['-created_at']
 
