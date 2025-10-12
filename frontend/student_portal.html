@@ -44,25 +44,116 @@
     </nav>
   </div>
 
-  <script>
+<script>
     let currentPage = 1;
+
     async function loadCategories() {
-        try {
-            const res = await fetch('http://127.0.0.1:8000/api/categories/');
-            const categories = await res.json();
-            const select = document.getElementById('categoryFilter');
-            categories.forEach(cat => {
-                const option = document.createElement('option');
-                option.value = cat.id;
-                option.textContent = cat.name;
-                select.appendChild(option);
-            });
-        } catch (error) {
-            console.error('Error loading categories:', error);
-        }
-        
+      try {
+        const res = await fetch('http://127.0.0.1:8000/api/categories/');
+        const categories = await res.json();
+        const select = document.getElementById('categoryFilter');
+        categories.forEach(cat => {
+          const option = document.createElement('option');
+          option.value = cat.slug;
+          option.textContent = cat.name;
+          select.appendChild(option);
+        });
+      } catch (err) {
+        console.error('Failed to load categories:', err);
+      }
     }
+
+    async function loadContent(search = '', category = '', page = 1) {
+      let url = `http://127.0.0.1:8000/api/content/?page=${page}`;
+      if (search) url += `&search=${encodeURIComponent(search)}`;
+      if (category) url += `&category=${encodeURIComponent(category)}`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        // Render content
+        const list = document.getElementById('contentList');
+        list.innerHTML = '';
+        if (data.results && data.results.length > 0) {
+          data.results.forEach(item => {
+            const card = `
+              <div class="card content-card">
+                <div class="card-body">
+                  <h5 class="card-title">${item.title}</h5>
+                  <p class="summary">${item.summary}</p>
+                  <small class="text-muted">Category: ${item.category.name || item.category}</small>
+                </div>
+              </div>
+            `;
+            list.innerHTML += card;
+          });
+        } else {
+          list.innerHTML = '<p class="text-center text-muted">No lessons found.</p>';
+        }
+
+        // Handle pagination
+        setupPagination(data.count, page);
+      } catch (err) {
+        console.error('Failed to load content:', err);
+        document.getElementById('contentList').innerHTML = '<p class="text-danger">Error loading lessons.</p>';
+      }
+    }
+
+    function setupPagination(totalItems, currentPage) {
+      const pageSize = 10;
+      const totalPages = Math.ceil(totalItems / pageSize);
+      const pagination = document.getElementById('pagination');
+      const list = document.getElementById('paginationList');
+      
+      if (totalPages <= 1) {
+        pagination.style.display = 'none';
+        return;
+      }
+      
+      pagination.style.display = 'block';
+      list.innerHTML = '';
+      
+      // Prev
+      if (currentPage > 1) {
+        list.innerHTML += `<li class="page-item"><a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a></li>`;
+      }
+      
+      // Pages (simplified: show current only)
+      list.innerHTML += `<li class="page-item active"><span class="page-link">${currentPage}</span></li>`;
+      
+      // Next
+      if (currentPage < totalPages) {
+        list.innerHTML += `<li class="page-item"><a class="page-link" href="#" data-page="${currentPage + 1}">Next</a></li>`;
+      }
+      
+      // Add click handlers
+      document.querySelectorAll('#paginationList a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const page = parseInt(e.target.dataset.page);
+          const search = document.getElementById('searchInput').value;
+          const category = document.getElementById('categoryFilter').value;
+          loadContent(search, category, page);
+        });
+      });
+    }
+
+    // Search button handler
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const search = document.getElementById('searchInput').value;
+      const category = document.getElementById('categoryFilter').value;
+      loadContent(search, category, 1);
+    });
+
+    // Allow Enter key in search
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') document.getElementById('searchBtn').click();
+    });
+
+    // Initial load
     loadCategories();
-  </script>
+    loadContent();
+</script>
 </body>
 </html>
