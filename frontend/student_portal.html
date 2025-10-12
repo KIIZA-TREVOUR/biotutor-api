@@ -45,6 +45,7 @@
   </div>
 
   <script>
+    let currentPage = 1;
     async function loadCategories() {
         try {
             const res = await fetch('http://127.0.0.1:8000/api/categories/');
