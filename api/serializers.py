@@ -1,6 +1,19 @@
 from rest_framework import serializers
-from .models import User, Category, BiologyContent
+from .models import Category, BiologyContent
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'password', 'role')
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -23,3 +36,4 @@ class BiologyContentSerializer(serializers.ModelSerializer):
                 setattr(instance, attr, value)
             instance.save()
             return instance
+
