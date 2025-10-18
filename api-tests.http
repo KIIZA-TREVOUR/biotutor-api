@@ -3,8 +3,8 @@ POST http://127.0.0.1:8000/api/auth/register/
 Content-Type: application/json
 
 {
-  "username": "teacher1",
-  "email": "trevour@biotutor.com",
+  "username": "teacher5",
+  "email": "trevour5@biotutor.com",
   "password": "trevour256",
   "role": "teacher"
 }
@@ -14,8 +14,8 @@ POST http://127.0.0.1:8000/api/auth/register/
 Content-Type: application/json
 
 {
-  "username": "student1",
-  "email": "ali@biotutor.com",
+  "username": "student3",
+  "email": "ali2@biotutor.com",
   "password": "student@256!",
   "role": "student"
 }
@@ -25,7 +25,7 @@ POST http://127.0.0.1:8000/api/auth/login/
 Content-Type: application/json
 
 {
-  "username": "teacher1",
+  "username": "teacher5",
   "password": "trevour256"
 }
 
@@ -34,7 +34,7 @@ POST http://127.0.0.1:8000/api/auth/login/
 Content-Type: application/json
 
 {
-  "username": "student1",
+  "username": "student3",
   "password": "student@256!"
 }
 
@@ -48,7 +48,7 @@ GET http://127.0.0.1:8000/api/categories/1/content/
 GET http://127.0.0.1:8000/api/content/
 
 ### 8. Search Content by Keyword (Public)
-GET http://127.0.0.1:8000/api/content/?search=cell
+GET http://127.0.0.1:8000/api/content/?search=biolog
 
 ### 9. Filter Content by Category Slug (Public)
 # Make sure a category with slug "cell-biology" exists in your DB
@@ -57,13 +57,13 @@ GET http://127.0.0.1:8000/api/content/?category__slug=cell-biology
 ### 10. Create New Biology Content (Teacher Only)
 # ➤ REPLACE {{access_token}} with actual access token from Step 3
 POST http://127.0.0.1:8000/api/content/
-Authorization: Bearer {{access_token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYwODEzNjExLCJpYXQiOjE3NjA4MTMzMTEsImp0aSI6IjJmMzg2MDhjMGNlYzRjZjM5MzNmNmIyZmRiZTljZTc1IiwidXNlcl9pZCI6IjEyIn0.fnuN5cX4vRaJ4yU1Xyr7WJFZjA3UGndm9isRbF4geuo
 Content-Type: application/json
 
 {
-  "slug": "mitochondria-the-powerhouse-of-the-cell",
+  "slug": "ansnsmitochondria-the-powerhouse-of-the-cell",
   "summary": "Overview of mitochondrial structure and function in energy production.",
-  "title": "Mitochondria: The Powerhouse of the Cell",
+  "title": "More Details Mitochondria: The Powerhouse of the Cell",
   "content_body": "Mitochondria are double-membrane organelles responsible for ATP production through cellular respiration. They contain their own DNA and replicate independently.",
   "category": 1,
   "is_published": true
@@ -72,21 +72,21 @@ Content-Type: application/json
 ### 11. List Content as Authenticated Teacher (Shows only your content)
 # ➤ REPLACE {{access_token}}
 GET http://127.0.0.1:8000/api/content/
-Authorization: Bearer {{access_token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYwODEzNDQwLCJpYXQiOjE3NjA4MTMxNDAsImp0aSI6IjBhOWU3Y2Y4MThiNjQ2ZDE5NmRmNDAyZGQyMDgzMTUxIiwidXNlcl9pZCI6IjExIn0.7uuJ7ZiO7uwSzn-LLFw6Sy1qmpbXBYmfWXKcKrFxDKE
 
 ### 12. Retrieve Specific Content by ID (Public if published)
 GET http://127.0.0.1:8000/api/content/1/
 
 ### 13. Update Your Content (Teacher + Author Only)
 # ➤ REPLACE {{access_token}} and ensure ID=1 belongs to you
-PUT http://127.0.0.1:8000/api/content/4/
-Authorization: Bearer {{access_token}}
+PUT http://127.0.0.1:8000/api/content/11/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYwODEzNjExLCJpYXQiOjE3NjA4MTMzMTEsImp0aSI6IjJmMzg2MDhjMGNlYzRjZjM5MzNmNmIyZmRiZTljZTc1IiwidXNlcl9pZCI6IjEyIn0.fnuN5cX4vRaJ4yU1Xyr7WJFZjA3UGndm9isRbF4geuo
 Content-Type: application/json
 
 {
   "slug": "mitochondria-updated-overview",
   "summary": "Updated details on oxidative phosphorylation ",
-  "title": "Mitochondria: Updated Overview",
+  "title": "Uganda Mitochondria: Updated Overview",
   "content_body": "Updated details on oxidative phosphorylation and mitochondrial DNA inheritance.",
   "category": 1,
   "is_published": true
@@ -94,6 +94,6 @@ Content-Type: application/json
 
 ### 14. Delete Your Content (Teacher + Author Only)
 # ➤ REPLACE {{access_token}}
-DELETE http://127.0.0.1:8000/api/content/4/
-Authorization: Bearer {{}}
+DELETE http://127.0.0.1:8000/api/content/11/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYwODEzNDQwLCJpYXQiOjE3NjA4MTMxNDAsImp0aSI6IjBhOWU3Y2Y4MThiNjQ2ZDE5NmRmNDAyZGQyMDgzMTUxIiwidXNlcl9pZCI6IjExIn0.7uuJ7ZiO7uwSzn-LLFw6Sy1qmpbXBYmfWXKcKrFxDKE
 
