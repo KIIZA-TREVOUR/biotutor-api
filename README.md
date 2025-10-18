@@ -546,33 +546,6 @@ No response body is returned on successful deletion.
 
 ---
 
-## 📝 Using the API with Different Tools
-
-### Using cURL
-
-```bash
-# Register a teacher
-curl -X POST http://127.0.0.1:8000/api/auth/register/ \
-  -H "Content-Type: application/json" \
-  -d '{"username":"teacher1","email":"trevour@biotutor.com","password":"trevour256","role":"teacher"}'
-
-# Login
-curl -X POST http://127.0.0.1:8000/api/auth/login/ \
-  -H "Content-Type: application/json" \
-  -d '{"username":"teacher1","password":"trevour256"}'
-
-# Get all categories
-curl http://127.0.0.1:8000/api/categories/
-
-# Create content (replace YOUR_TOKEN with actual token)
-curl -X POST http://127.0.0.1:8000/api/content/ \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Test Lesson","slug":"test-lesson","summary":"Test summary","content_body":"Test content","category":1,"is_published":true}'
-```
-
----
-
 ### Using Postman
 
 1. **Import requests** as a Postman collection
@@ -586,65 +559,6 @@ curl -X POST http://127.0.0.1:8000/api/content/ \
 - Select Type: "Bearer Token"
 - Token: `{{access_token}}`
 
----
-
-### Using Python Requests
-
-```python
-import requests
-
-BASE_URL = "http://127.0.0.1:8000"
-
-# 1. Register a teacher
-register_data = {
-    "username": "teacher1",
-    "email": "trevour@biotutor.com",
-    "password": "trevour256",
-    "role": "teacher"
-}
-response = requests.post(f"{BASE_URL}/api/auth/register/", json=register_data)
-print("Registration:", response.json())
-
-# 2. Login
-login_data = {
-    "username": "teacher1",
-    "password": "trevour256"
-}
-response = requests.post(f"{BASE_URL}/api/auth/login/", json=login_data)
-tokens = response.json()
-access_token = tokens['access']
-print("Access Token:", access_token)
-
-# 3. Set up headers with token
-headers = {
-    "Authorization": f"Bearer {access_token}",
-    "Content-Type": "application/json"
-}
-
-# 4. Get all categories
-response = requests.get(f"{BASE_URL}/api/categories/")
-print("Categories:", response.json())
-
-# 5. Create new content
-content_data = {
-    "title": "Photosynthesis Process",
-    "slug": "photosynthesis-process",
-    "summary": "Overview of photosynthesis in plants",
-    "content_body": "Photosynthesis is the process by which plants convert light energy into chemical energy...",
-    "category": 1,
-    "is_published": True
-}
-response = requests.post(f"{BASE_URL}/api/content/", json=content_data, headers=headers)
-print("New Content:", response.json())
-
-# 6. Get all content
-response = requests.get(f"{BASE_URL}/api/content/", headers=headers)
-print("All Content:", response.json())
-
-# 7. Search content
-response = requests.get(f"{BASE_URL}/api/content/?search=photosynthesis")
-print("Search Results:", response.json())
-```
 
 ---
 
