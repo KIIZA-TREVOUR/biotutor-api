@@ -20,10 +20,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'slug', 'created_at']
 
 class BiologyContentSerializer(serializers.ModelSerializer):
-    category = serializers.SlugRelatedField(
-        slug_field='name',
-        queryset=Category.objects.all()
-    )
+    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
     author = serializers.StringRelatedField(read_only=True)
     class Meta:
         model = BiologyContent

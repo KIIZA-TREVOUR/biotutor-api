@@ -1,0 +1,99 @@
+### 1. Register a Teacher
+POST http://127.0.0.1:8000/api/auth/register/
+Content-Type: application/json
+
+{
+  "username": "teacher1",
+  "email": "trevour@biotutor.com",
+  "password": "trevour256",
+  "role": "teacher"
+}
+
+### 2. Register a Student
+POST http://127.0.0.1:8000/api/auth/register/
+Content-Type: application/json
+
+{
+  "username": "student1",
+  "email": "ali@biotutor.com",
+  "password": "student@256!",
+  "role": "student"
+}
+
+### 3. Login as Teacher
+POST http://127.0.0.1:8000/api/auth/login/
+Content-Type: application/json
+
+{
+  "username": "teacher1",
+  "password": "trevour256"
+}
+
+### 4. Login as Student
+POST http://127.0.0.1:8000/api/auth/login/
+Content-Type: application/json
+
+{
+  "username": "student1",
+  "password": "student@256!"
+}
+
+### 5. Get All Categories (Public)
+GET http://127.0.0.1:8000/api/categories/
+
+### 6. Get Content Under Category ID 1 (Public)
+GET http://127.0.0.1:8000/api/categories/1/content/
+
+### 7. List All Published Content (Public)
+GET http://127.0.0.1:8000/api/content/
+
+### 8. Search Content by Keyword (Public)
+GET http://127.0.0.1:8000/api/content/?search=cell
+
+### 9. Filter Content by Category Slug (Public)
+# Make sure a category with slug "cell-biology" exists in your DB
+GET http://127.0.0.1:8000/api/content/?category__slug=cell-biology
+
+### 10. Create New Biology Content (Teacher Only)
+# ➤ REPLACE {{access_token}} with actual access token from Step 3
+POST http://127.0.0.1:8000/api/content/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYwODA0NzI3LCJpYXQiOjE3NjA4MDQ0MjcsImp0aSI6IjI5MTE5YzBjNzkxNTQ2NzFiZDA0NGE2NzdkYzVjZjNmIiwidXNlcl9pZCI6IjcifQ.wZSncg24PXBXoB_7HMvZFnpkiosw38fNQydiB_45I7Y
+Content-Type: application/json
+
+{
+  "slug": "mitochondria-the-powerhouse-of-the-cell",
+  "summary": "Overview of mitochondrial structure and function in energy production.",
+  "title": "Mitochondria: The Powerhouse of the Cell",
+  "content_body": "Mitochondria are double-membrane organelles responsible for ATP production through cellular respiration. They contain their own DNA and replicate independently.",
+  "category": 1,
+  "is_published": true
+}
+
+### 11. List Content as Authenticated Teacher (Shows only your content)
+# ➤ REPLACE {{access_token}}
+GET http://127.0.0.1:8000/api/content/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYwODA0NzI3LCJpYXQiOjE3NjA4MDQ0MjcsImp0aSI6IjI5MTE5YzBjNzkxNTQ2NzFiZDA0NGE2NzdkYzVjZjNmIiwidXNlcl9pZCI6IjcifQ.wZSncg24PXBXoB_7HMvZFnpkiosw38fNQydiB_45I7Y
+
+### 12. Retrieve Specific Content by ID (Public if published)
+GET http://127.0.0.1:8000/api/content/1/
+
+### 13. Update Your Content (Teacher + Author Only)
+# ➤ REPLACE {{access_token}} and ensure ID=1 belongs to you
+PUT http://127.0.0.1:8000/api/content/4/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYwODAzNzUzLCJpYXQiOjE3NjA4MDM0NTMsImp0aSI6ImJhMGUwNjRjZDM5MzQ0YTc5MDkyMTljNGM0YmRkMTRhIiwidXNlcl9pZCI6IjYifQ.ohd2iuMYEewYo8Ff0nbJZpHz1cft9ptamB6GlV7p5cM
+Content-Type: application/json
+
+{
+  "slug": "mitochondria-updated-overview",
+  "summary": "Updated details on oxidative phosphorylation ",
+  "title": "Mitochondria: Updated Overview",
+  "content_body": "Updated details on oxidative phosphorylation and mitochondrial DNA inheritance.",
+  "category": 1,
+  "is_published": true
+}
+
+### 14. Delete Your Content (Teacher + Author Only)
+# ➤ REPLACE {{access_token}}
+DELETE http://127.0.0.1:8000/api/content/4/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYwODAzNzUzLCJpYXQiOjE3NjA4MDM0NTMsImp0aSI6ImJhMGUwNjRjZDM5MzQ0YTc5MDkyMTljNGM0YmRkMTRhIiwidXNlcl9pZCI6IjYifQ.ohd2iuMYEewYo8Ff0nbJZpHz1cft9ptamB6GlV7p5cM
+
